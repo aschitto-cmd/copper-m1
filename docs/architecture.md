@@ -63,6 +63,33 @@ Don't mix these up:
 - **No authentication or row-level security yet.** They arrive in a later
   module.
 
+## Module 1: Landing page
+
+**Summary:** replaces the placeholder home page with a one-page landing page
+(hero, products, showcase, Copper Plus pricing, privacy) built from the
+catalog, so prices and policy text can't drift from the Product Bible.
+
+| Piece | Where | What it does |
+|---|---|---|
+| Page / route | `app/page.tsx` | Still the only route; composes the header, five sections and the footer |
+| Components | `components/copper/landing/` | `Hero`, `Products`, `Showcase`, `PlusPricing`, `PrivacySummary`; `images.ts` holds alt text, captions and color swatches keyed by catalog image paths and color names |
+| Brand components | `components/copper/site-header.tsx`, `site-footer.tsx` | Sticky header with links to `#products`, `#plus`, `#privacy`; Night Sky footer with the logo |
+| Images | `public/assets/{cutouts,lifestyle,brand}/` | Moved from `specs/module-1/assets/` with `git mv`; served through `next/image` |
+| Data | `lib/copper/catalog.ts` | Read-only: `getProducts()`, `getPlans()`, `getPrivacySummary()` and the `format…()` helpers |
+| AI calls | None | |
+
+**Data flow:** request for `/` → server components call the catalog → static
+HTML (the page is prerendered at build time).
+
+**Decisions and trade-offs:** sections are server components with no client
+JavaScript beyond the theme toggle. The footer uses the `dark` class so it's
+Night Sky in both themes. On phones the hero shows the products above the
+headline so they're the first thing you see.
+
+**Risks and open questions:** the privacy text comes straight from the 2026
+policy in the catalog; the old "never records" claim must stay off the page
+(AC-3.3).
+
 ## Adding a module
 
 When a module changes how the app fits together, add a section here:
